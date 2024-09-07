@@ -1,7 +1,7 @@
 {
-	"name": "@edgefirst-dev/package-name",
+	"name": "@edgefirst-dev/worker-kv-rate-limit",
 	"version": "0.0.0",
-	"description": "A description of the package",
+	"description": "A Rate Limit based on Cloudflare's Worker KV.",
 	"license": "MIT",
 	"funding": ["https://github.com/sponsors/sergiodxa"],
 	"author": {
@@ -11,11 +11,11 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/edgefirst-dev/package-name"
+		"url": "https://github.com/edgefirst-dev/worker-kv-rate-limit"
 	},
-	"homepage": "https://edgefirst-dev.github.io/package-name",
+	"homepage": "https://edgefirst-dev.github.io/worker-kv-rate-limit",
 	"bugs": {
-		"url": "https://github.com/edgefirst-dev/package-name/issues"
+		"url": "https://github.com/edgefirst-dev/worker-kv-rate-limit/issues"
 	},
 	"scripts": {
 		"build": "tsc",
