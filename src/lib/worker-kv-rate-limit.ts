@@ -94,7 +94,7 @@ export class WorkerKVRateLimit implements RateLimit {
 	}
 
 	async writeHttpMetadata(
-		options: RateLimitOptions,
+		options: RateLimitOptions & { resource?: string },
 		headers = new Headers(),
 	): Promise<Headers> {
 		let limit = this.#limit;
@@ -115,7 +115,12 @@ export class WorkerKVRateLimit implements RateLimit {
 			(this.#limit - result.remaining).toString(),
 		);
 		headers.append("X-RateLimit-Reset", result.reset.toString());
-		headers.append("X-RateLimit-Resource", options.key);
+
+		if (options.resource) {
+			headers.append("X-RateLimit-Resource", options.resource);
+		}
+
+		// Standard HTTP header for rate limiting
 		headers.append("Retry-After", result.reset.toString());
 
 		return headers;

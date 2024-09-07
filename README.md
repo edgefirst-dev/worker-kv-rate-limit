@@ -31,13 +31,19 @@ export default {
     if (!success) {
       return new Response(`429 Failure – rate limit exceeded for ${pathname}`, {
         status: 429,
-        headers: await rateLimit.writeHttpMetadata({ key: pathname }),
+        headers: await rateLimit.writeHttpMetadata({
+          key: pathname,
+          resource: "resource identifier", // Optional
+        }),
       });
     }
 
     return new Response(`Success!`, {
       status: 200,
-      headers: await rateLimit.writeHttpMetadata({ key: pathname }),
+      headers: await rateLimit.writeHttpMetadata({
+        key: pathname,
+        resource: "resource identifier", // Optional
+      }),
     });
   },
 } satisfies ExportedHandler<Env>;
@@ -50,7 +56,10 @@ The `writeHttpMetadata` function returns an object with the necessary headers to
 If you want to apply extra headers, you can either keep the result Headers object and append headers there.
 
 ```ts
-let headers = await rateLimit.writeHttpMetadata({ key: pathname });
+let headers = await rateLimit.writeHttpMetadata({
+  key: pathname,
+  resource: "resource identifier", // Optional
+});
 headers.set("X-Extra-Header", "Extra Value");
 ```
 
@@ -60,8 +69,25 @@ Or you can pass a Headers object to the `writeHttpMetadata` function and it will
 let headers = new Headers();
 headers.set("X-Extra-Header", "Extra Value");
 
-await rateLimit.writeHttpMetadata({ key: pathname, headers });
+await rateLimit.writeHttpMetadata(
+  {
+    key: pathname,
+    resource: "resource identifier", // Optional
+  },
+  headers
+);
 ```
+
+The `writeHttpMetadata` will set the following headers:
+
+- `X-RateLimit-Limit`: The maximum number of requests allowed in the current window.
+- `X-RateLimit-Remaining`: The number of requests remaining in the current window.
+- `X-RateLimit-Used`: The number of requests used in the current window.
+- `X-RateLimit-Reset`: The time in seconds when the rate limit window resets.
+- `X-RateLimit-Resource`: The resource being rate limited (if provided).
+- `Retry-After`: The time in seconds when the rate limit window resets.
+
+The `X-RateLimit-Reset` and `Retry-After` headers are the same and represent the time in seconds when the rate limit window resets, the reason to duplicate them is to keep compatibility with the `Retry-After` header that is used by the HTTP standard and consistency with common `X-RateLimit-` headers.
 
 ## License
 

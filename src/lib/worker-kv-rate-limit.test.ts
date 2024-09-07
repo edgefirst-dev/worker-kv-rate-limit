@@ -43,13 +43,13 @@ describe(WorkerKVRateLimit.name, () => {
 		let key = "key:4";
 
 		let headers = new Headers();
-		await rateLimit.writeHttpMetadata({ key }, headers);
+		await rateLimit.writeHttpMetadata({ key, resource: "test" }, headers);
 
 		expect(headers.get("X-RateLimit-Limit")).toBe("1");
 		expect(headers.get("X-RateLimit-Remaining")).toBe("1");
 		expect(headers.get("X-RateLimit-Used")).toBe("0");
 		expect(new Date(Number(headers.get("X-RateLimit-Reset")))).toBeValidDate();
-		expect(headers.get("X-RateLimit-Resource")).toBe("key:4");
+		expect(headers.get("X-RateLimit-Resource")).toBe("test");
 		expect(new Date(Number(headers.get("Retry-After")))).toBeValidDate();
 	});
 
@@ -57,13 +57,13 @@ describe(WorkerKVRateLimit.name, () => {
 		let rateLimit = new WorkerKVRateLimit(kv, { limit: 1, period: 60 });
 		let key = "key:5";
 
-		let headers = await rateLimit.writeHttpMetadata({ key });
+		let headers = await rateLimit.writeHttpMetadata({ key, resource: "test" });
 
 		expect(headers.get("X-RateLimit-Limit")).toBe("1");
 		expect(headers.get("X-RateLimit-Remaining")).toBe("1");
 		expect(headers.get("X-RateLimit-Used")).toBe("0");
 		expect(new Date(Number(headers.get("X-RateLimit-Reset")))).toBeValidDate();
-		expect(headers.get("X-RateLimit-Resource")).toBe("key:5");
+		expect(headers.get("X-RateLimit-Resource")).toBe("test");
 		expect(new Date(Number(headers.get("Retry-After")))).toBeValidDate();
 	});
 });
