@@ -1,3 +1,2 @@
-export function doSomething() {
-	throw new Error("Not implemented yet");
-}
+import { WorkerKVRateLimit } from "./lib/worker-kv-rate-limit.js";
+export { WorkerKVRateLimit };
