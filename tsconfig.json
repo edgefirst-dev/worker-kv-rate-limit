@@ -4,6 +4,7 @@
 	"include": ["src/index.ts"],
 	"compilerOptions": {
 		"outDir": "./build",
-		"types": ["@cloudflare/workers-types"]
+		"types": ["@cloudflare/workers-types"],
+		"lib": ["ES2015"]
 	}
 }
