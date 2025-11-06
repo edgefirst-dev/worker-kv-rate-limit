@@ -50,7 +50,7 @@ describe(WorkerKVRateLimit.name, () => {
 		expect(headers.get("X-RateLimit-Used")).toBe("0");
 		expect(new Date(Number(headers.get("X-RateLimit-Reset")))).toBeValidDate();
 		expect(headers.get("X-RateLimit-Resource")).toBe("test");
-		expect(new Date(Number(headers.get("Retry-After")))).toBeValidDate();
+		expect(new Date(Date.parse(headers.get("Retry-After") ?? ""))).toBeValidDate();
 	});
 
 	test("#writeHttpMetadata returns new Headers object", async () => {
@@ -64,6 +64,6 @@ describe(WorkerKVRateLimit.name, () => {
 		expect(headers.get("X-RateLimit-Used")).toBe("0");
 		expect(new Date(Number(headers.get("X-RateLimit-Reset")))).toBeValidDate();
 		expect(headers.get("X-RateLimit-Resource")).toBe("test");
-		expect(new Date(Number(headers.get("Retry-After")))).toBeValidDate();
+		expect(new Date(Date.parse(headers.get("Retry-After") ?? ""))).toBeValidDate();
 	});
 });
