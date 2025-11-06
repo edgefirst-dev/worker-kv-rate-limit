@@ -121,7 +121,7 @@ export class WorkerKVRateLimit implements RateLimit {
 		}
 
 		// Standard HTTP header for rate limiting
-		headers.append("Retry-After", result.reset.toString());
+		headers.append("Retry-After", new Date(result.reset).toUTCString());
 
 		return headers;
 	}
