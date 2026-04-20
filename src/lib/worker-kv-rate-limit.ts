@@ -75,10 +75,19 @@ export class WorkerKVRateLimit implements RateLimit {
 		// Set the reset time to the current time plus the period
 		result.reset = Date.now() + period * 1000;
 
-		// Store the updated result in the KV store
-		await this.kv.put(key, JSON.stringify(result), {
-			expirationTtl: period,
-		});
+		try {
+			// Store the updated result in the KV store
+			await this.kv.put(key, JSON.stringify(result), {
+				expirationTtl: period,
+			});
+		} catch (error) {
+			if (error instanceof Error && error.message.includes('429 Too Many Requests')) {
+			  // internal KV rate limiting has been triggered, see https://developers.cloudflare.com/kv/api/write-key-value-pairs/#limits-to-kv-writes-to-the-same-key
+			  return { success: false };
+			}
+
+			throw error;
+		}
 
 		// Return the outcome
 		return { success: result.remaining >= 0 };
