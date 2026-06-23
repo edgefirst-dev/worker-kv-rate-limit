@@ -85,9 +85,9 @@ The `writeHttpMetadata` will set the following headers:
 - `X-RateLimit-Used`: The number of requests used in the current window.
 - `X-RateLimit-Reset`: The time in seconds when the rate limit window resets.
 - `X-RateLimit-Resource`: The resource being rate limited (if provided).
-- `Retry-After`: The time in seconds when the rate limit window resets.
+- `Retry-After`: The timestamp when the rate limit window resets as a UTC string according to RFC 5322.
 
-The `X-RateLimit-Reset` and `Retry-After` headers are the same and represent the time in seconds when the rate limit window resets, the reason to duplicate them is to keep compatibility with the `Retry-After` header that is used by the HTTP standard and consistency with common `X-RateLimit-` headers.
+The `X-RateLimit-Reset` and `Retry-After` headers contain the same timestamp in different formats. `Retry-After` header format is defined in [section 10.2.3 of the RFC 9110](https://www.rfc-editor.org/rfc/rfc9110#section-10.2.3).
 
 ## License
 
