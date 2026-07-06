@@ -41,7 +41,7 @@
 		"./package.json": "./package.json"
 	},
 	"dependencies": {
-		"@cloudflare/workers-types": "^4.20240903.0"
+		"@cloudflare/workers-types": "^5.20260706.1"
 	},
 	"peerDependencies": {},
 	"devDependencies": {
