@@ -43,6 +43,8 @@ export namespace WorkerKVRateLimit {
 	}
 }
 
+const MINIMUM_TTL = 60; // 60 seconds, KV minimum TTL, see https://developers.cloudflare.com/kv/api/write-key-value-pairs/
+
 export class WorkerKVRateLimit implements RateLimit {
 	#limit: WorkerKVRateLimit.Options["limit"];
 	#period: WorkerKVRateLimit.Options["period"];
@@ -65,7 +67,7 @@ export class WorkerKVRateLimit implements RateLimit {
 
 		let result = await this.kv.get<WorkerKVRateLimit.Result>(key, "json");
 
-		if (!result) {
+		if (!result || result.reset < Date.now()) {
 			result = { remaining: limit, reset: Date.now() + period * 1000 };
 		}
 
@@ -77,7 +79,7 @@ export class WorkerKVRateLimit implements RateLimit {
 
 		// Store the updated result in the KV store
 		await this.kv.put(key, JSON.stringify(result), {
-			expirationTtl: period,
+			expirationTtl: Math.ceil(Math.max((result.reset - Date.now()) / 1000, MINIMUM_TTL)),
 		});
 
 		// Return the outcome
@@ -104,7 +106,7 @@ export class WorkerKVRateLimit implements RateLimit {
 
 		let result = await this.kv.get<WorkerKVRateLimit.Result>(key, "json");
 
-		if (!result) {
+		if (!result || result.reset < Date.now()) {
 			result = { remaining: limit, reset: Date.now() + period * 1000 };
 		}
 
